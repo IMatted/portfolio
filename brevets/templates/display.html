@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stored Brevet Times</title>
+</head>
+<body>
+    <h1>All Submitted Control Times</h1>
+    
+    {% for entry in items %}
+        <div style="border: 1px solid black; margin-bottom: 20px; padding: 10px;">
+            <h3>Submission ID: {{ entry._id }}</h3>
+            <table border="1">
+                <tr>
+                    <th>Distance (km)</th>
+                    <th>Open Time</th>
+                    <th>Close Time</th>
+                </tr>
+                {% for time in entry.times %}
+                <tr>
+                    <td>{{ time.km }}</td>
+                    <td>{{ time.open }}</td>
+                    <td>{{ time.close }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    {% endfor %}
+    
+    <p><a href="/">Back to Calculator</a></p>
+</body>
+</html>

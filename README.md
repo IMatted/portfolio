@@ -1,150 +1,181 @@
-# Project 6: Brevet time calculator service
+# Project 6: Brevet Calculator, Powered by MongoDB With a RestAPI
+Author: Danish Singh
 
-Simple listing service from project 5 stored in MongoDB database.
+Contact: danishs@uoregon.edu
 
-## What is in this repository
+Course: CS 322
 
-You have a minimal implementation of Docker compose in DockerRestAPI folder, using which you can create REST API-based services (as demonstrated in class). 
+## Project Description:
+This project is designed to calculate the opening and closing times for a Brevet race based on distinct control points entered by the user.
+It makes use of a Flask frontend and an AJAX backend to dynamically update the web-app. On the web app, a submit button allows you to submit control points, opening times, and closing times to a database powered by MongoDB, beside the submit button is the display button which fetches the submitted entries to the database and displays them in a separate webpage. Once data is stored in the database, it is retrieved to be used on the consumer service side, which makes use of a RestAPI for a consumer service, allowing the user to view open and close times in the form of a webpage, json, and csv format.
 
-## Recap 
+---
 
-You will reuse *your* code from project 5 (https://bitbucket.org/UOCIS322/proj5-mongo). Recall: you created the following functionalities.
+## The Algorithm:
+[Project 4]: To understand the algorithm, an essential to understand the concept of control points. 
+Control points are points that split up a race, (i.e., A 200km race could be split into controls of 50km, 100km, 150km, 200km) a participant must pass through these points to obtain proof of passage. 
+Building off of this, control times are the minimum and maximum times by which the rider must arrive at the location. 
 
-1. Two buttons ("Submit") and ("Display") in the page where you have controle times.
-2. On clicking the Submit button, the control times were be entered into the database.
-3. On clicking the Display button, the entries from the database were be displayed in a new page.
-4. You also handled error cases appropriately.
+The algorithm for calculating the control times is based from the offical RUSA website (https://rusa.org/pages/acp-brevet-control-times-calculator)
+> The opening time calculation is done by first finding the total distance of one control point to another, for example 125km to 200km would be 75km, we call this a "section"
+>
+> Next, it takes the section and divides it by the max speed to get its final result. (The maximum speed is obtained through the offical RUSA website)
 
-## Functionality you will add
+> The closing time calculation is done by finding the total distance of one control point to another, just like the opening function, we call this a "section"
+>
+> Next, it takes the section and divides it by the minimum speed to get its final result. (The minimum speed is obtained through the offical RUSA website)
 
-This project has following four parts. Change the values for host and port according to your machine, and use the web browser to check the results.
+How this translates on the web-app:
+> First the user selects the length of the Brevet race. (200km, 400km, 600km, 800km, 1000km)
+>
+> Next the user inputs the length of each control point into a cell.
+>
+> The Flask frontend receives this data and performs the algorithmic calculations, and subsequently the AJAX backend serves the live calculation to the user. 
 
-* You will design RESTful service to expose what is stored in MongoDB. Specifically, you'll use the boilerplate given in DockerRestAPI folder, and create the following three basic APIs:
-    * `http://<host:port>/listAll` should return all open and close times in the database
-    * `http://<host:port>/listOpenOnly` should return open times only
-    * `http://<host:port>/listCloseOnly` should return close times only
+[Project 5]: Once the algorithmic calculations are made:
+> The user can click the submit button, which sends the control point distance, opening time, and closing time distance into an entry in the MongoDB database
+>
+> Hitting display button renders and redirects the user to the display page in which uses the AJAX backend to retrieve the data and html to display the entries currently in the database in a neat organized fashion.
 
-* You will also design two different representations: one in csv and one in json. For the above three basic APIs, JSON should be your default representation. 
-    * `http://<host:port>/listAll/csv` should return all open and close times in CSV format
-    * `http://<host:port>/listOpenOnly/csv` should return open times only in CSV format
-    * `http://<host:port>/listCloseOnly/csv` should return close times only in CSV format
+[Project 6]: After the data is stored in the database:
+> The open and close times, given from the MongoDB database entries, will be displayed on the consumer web-service page, which allows a user to view all open and closing times for a submitted Brevet race from the Brevet calculator
+>
+> On the webpage lies various hyperlinks which makes use of RestAPI principles, specifically the principle of a resource, and in this case the resource allows users to view open and close times in a JSON or CSV format, with the user also having the power to filter data by modifying the resource link (i.e., listAll/json or listCloseOnly/csv) and lastly, allows the user to list the top "k" opening/closing times with k being any positive integer (i.e., listOpenOnly/csv?top=3 will list the top 3 opening times, in csv)
+>
+> *note that JSON will be the default output if not specified in the resource link.
 
-    * `http://<host:port>/listAll/json` should return all open and close times in JSON format
-    * `http://<host:port>/listOpenOnly/json` should return open times only in JSON format
-    * `http://<host:port>/listCloseOnly/json` should return close times only in JSON format
+---
 
-* You will also add a query parameter to get top "k" open and close times. For examples, see below.
+# Running the Application
+To run the application follow these steps:
 
-    * `http://<host:port>/listOpenOnly/csv?top=3` should return top 3 open times only (in ascending order) in CSV format 
-    * `http://<host:port>/listOpenOnly/json?top=5` should return top 5 open times only (in ascending order) in JSON format
-    * `http://<host:port>/listCloseOnly/csv?top=6` should return top 5 close times only (in ascending order) in CSV format
-    * `http://<host:port>/listCloseOnly/json?top=4` should return top 4 close times only (in ascending order) in JSON format
+>  Navigate to the project directory and run in terminal:
+>
+> **cd DockerRestAPI**
+>
+> **docker compose up -d** 
+>
+> Upon execution, 4 images will be built, and subsequently, 4 containers will be ran in parallel. One for the Brevets Race Calculator, one for MongoDB, one for PHP server, and one for the consumer web-service.
+>
+> To view the Brevets Calculator, go to a browser of choice and type in the search bar:
+>
+> **http://localhost:5002/**
+>
+> To view the Consumer Web-Service, go to the browser of choice and type in the search bar:
+>
+> **http://localhost:5000/**
+>
+> The app is deployed and ready! (Note localhost:5001 is used to display the data via JSON or CSV format)
 
-* You'll also design consumer programs (e.g., in jQuery) to use the service that you expose. "website" inside DockerRestAPI is an example of that. It is uses PHP. You're welcome to use either PHP or jQuery to consume your services. NOTE: your consumer program should be in a different container like example in DockerRestAPI.
+To stop the application follow these steps:
 
-## Data Samples
+> Run in terminal:
+>
+> **docker-compose down**
+>
+> The application and containers have now stopped running, you can now safely delete the images from docker.
 
-The sample data files ([sample-data.json](data-samples/sample-data.json), [sample-data.csv](data-samples/sample-data.csv), and [sample-data-pivoted.csv](data-samples/sample-data-pivoted.csv)) provide a suggested JSON and CSV format that you could follow for your exports. 
+# Entering the Database Through Command Line
 
-1. JSON
-```json
-{
-   "brevets":[
-      {
-         "distance":200,
-         "begin_date":"12/01/2021",
-         "begin_time":"18:06",
-         "controls":[
-            {
-               "km":0,
-               "mi":0,
-               "location":"begin",
-               "open":"12/01/2021 18:06",
-               "close":"12/01/2021 19:06"
-            },
-            {
-               "km":100,
-               "mi":62,
-               "location":null,
-               "open":"12/01/2021 21:02",
-               "close":"12/02/2021 00:46"
-            },
-            {
-               "km":150,
-               "mi":93,
-               "location":"second checkpoint",
-               "open":"12/01/2021 22:31",
-               "close":"12/02/2021 04:06"
-            },
-            {
-               "km":200,
-               "mi":124,
-               "location":"last checkpoint",
-               "open":"12/01/2021 23:59",
-               "close":"12/02/2021 07:36"
-            }
-         ]
-      },
-      {
-         "distance":1000,
-         "begin_date":"01/01/2022",
-         "begin_time":"00:00",
-         "controls":[
-            {
-               "km":0,
-               "mi":0,
-               "location":"begin",
-               "open":"01/01/2022 00:00",
-               "close":"01/01/2022 01:00"
-            },
-            {
-               "km":1000,
-               "mi":621,
-               "location":"finish line",
-               "open":"01/01/2022 09:05",
-               "close":"01/04/2022 03:00"
-            }
-         ]
-      }
-   ]
-}
-```
+To enter the database from the terminal follow these steps:
 
-2. CSV
-```csv
-brevets/distance,brevets/begin_date,brevets/begin_time,brevets/controls/0/km,brevets/controls/0/mi,brevets/controls/0/location,brevets/controls/0/open,brevets/controls/0/close,brevets/controls/1/km,brevets/controls/1/mi,brevets/controls/1/location,brevets/controls/1/open,brevets/controls/1/close,brevets/controls/2/km,brevets/controls/2/mi,brevets/controls/2/location,brevets/controls/2/open,brevets/controls/2/close,brevets/controls/3/km,brevets/controls/3/mi,brevets/controls/3/location,brevets/controls/3/open,brevets/controls/3/close
-200,12/01/2021,18:06,0,0,begin,12/01/2021 18:06,12/01/2021 19:06,100,62,,12/01/2021 21:02,12/02/2021 00:46,150,93,second checkpoint,12/01/2021 22:31,12/02/2021 04:06,200,124,last checkpoint,12/01/2021 23:59,12/02/2021 07:36
-1000,01/01/2022,00:00,0,0,begin,01/01/2022 00:00,01/01/2022 01:00,1000,621,finish line,01/01/2022 09:05,01/04/2022 03:00,,,,,,,,,,
-```
+> Make sure you are in the "DockerRestAPI" directory, if not, navigate to the project directory and type in terminal:
+>
+> **cd DockerRestAPI**
+>
+> Execute in terminal:
+>
+> **docker compose exec db mongo**
+>
+> **use brevetsdb**
+>
+> You are now in the database!
+>
+> To see all entries in the database through the terminal execute:
+>
+> **db.brevets_list.find().pretty()**
+>
+> To delete all entries you can execute in the terminal:
+>
+> **db.brevets_list.drop()**
+>
+> To exit the database, simply type in terminal:
+>
+> **exit**
 
-## Tasks
+---
 
-You'll turn in your credentials.ini (including the keys `author` and `repo` under the section `[DEFAULT]`) using which we will get the following:
+# Running Tests
 
-* The working application with three parts.
+**This Assumes the Application is Running**
 
-* Dockerfile
+To run tests regarding the database follow these steps:
 
-* docker-compose.yml
+> Make sure you are in the "DockerRestAPI" directory, if not, navigate to the project directory and type in terminal:
+>
+> **cd DockerRestAPI**
+>
+> Next to run the tests, execute in the terminal:
+>
+> **docker compose exec web pytest test_database.py**
 
-## Grading Rubric
+To run tests regarding the algorithmic calculation logic follow these steps:
 
-* If your code works as expected: 100 points. This includes:
-    * Basic APIs work as expected. (15 points)
-    * Representations work as expected. (30 points)
-    * Query parameter-based APIs work as expected. (10 points)
-    * Consumer program works as expected. (10 points)
+> Make sure you are in the "DockerRestAPI" directory, if not, navigate to the project directory and type in terminal:
+>
+> **cd DockerRestAPI**
+>
+> Next to run the tests, execute in the terminal:
+>
+> **docker compose exec web pytest test_acp_times.py**
 
-* For each non-working API, 5 points will be docked off. If none of them work,
-  you'll get 35 points assuming
-    * README is updated with your name and email ID. (5 points)
-    * The credentials.ini is submitted with the correct URL of your repo. (15 points)
-    * Dockerfile is present. 
-    * Docker-compose.yml works/builds without any errors. (15 points)
+To run tests regarding the RestAPI follow these steps:
 
-* If README is not updated, 5 points will be docked off. 
+> Make sure you are in the "DockerRestAPI" directory, if not, navigate to the project directory and type in terminal:
+>
+> **cd DockerRestAPI**
+>
+> Next to run the tests, execute in the terminal:
+>
+> **./testapi.sh**
 
-* If the Docker-compose.yml doesn't build or is missing, 15 points will be
-  docked off. Same for Dockerfile as well.
+---
 
-* If credentials.ini is missing, 0 will be assigned.
+The list of dependencies is as follows:
+
+> Docker
+>
+> Git Bash [Windows Only]
+>
+> Python version 3.14
+>
+
+Libraries (detailed from requirements.txt):
+
+- arrow
+
+- flask
+
+- nose
+
+- pep8
+
+- autopep8
+
+- pytest
+
+- pymongo
+
+- flask-restful
+
+Set-up Instructions:
+
+> Place directory containing the app in a directory of choice
+>
+> Follow instructions on how to run the app
+
+--- 
+
+Maintainer: Danish Singh
+
+Contact: danishs@uoregon.edu
