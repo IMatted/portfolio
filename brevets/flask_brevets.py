@@ -17,7 +17,7 @@ import os
 
 # WINDOWS CLIENT:
 # client = MongoClient('mongodb://db:27017/')
-client = MongoClient(os.environ['DB_PORT_27017_TCP_ADDR'], 27017)
+client = MongoClient(host=os.environ.get('DB_PORT_27017_TCP_ADDR', 'db'), port=27017)
 db = client.brevetsdb
 
 # Global Variables
