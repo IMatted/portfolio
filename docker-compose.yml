@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend:/app
+    environment:
+      - MONGO_URI=mongodb://db:27017/release_architect_db
+    depends_on:
+      - db
+
+  db:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  frontend:
+    image: php:8.2-apache
+    ports:
+      - "8080:80"
+    volumes:
+      - ./frontend:/var/www/html
+    depends_on:
+      - backend
+
+volumes:
+  mongo_data:

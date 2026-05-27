@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automated Release Note Architect</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Automated Release Note Architect</h1>
+    </header>
+
+    <main class="container">
+        <section class="form-section">
+            <h2>Generate New Release</h2>
+            <form id="releaseForm">
+                <div class="form-group">
+                    <label for="version">Version Tag:</label>
+                    <input type="text" id="version" placeholder="e.g., v1.0.0" required>
+                </div>
+                <div class="form-group">
+                    <label for="title">Release Title:</label>
+                    <input type="text" id="title" placeholder="e.g., The Database Migration" required>
+                </div>
+                <div class="form-group">
+                    <label for="rawNotes">Raw Developer Changes (one per line):</label>
+                    <textarea id="rawNotes" rows="6" placeholder="fixed a bug in auth route&#10;added padding to dashboard button&#10;updated mongo environment string" required></textarea>
+                </div>
+                <button type="submit" id="submitBtn">Architect Release Notes</button>
+            </form>
+            <div id="loadingState" class="hidden">
+                <p class="spinner">⏳ AI is structuring your release notes...</p>
+            </div>
+        </section>
+
+        <section class="timeline-section">
+            <h2>Release History Timeline</h2>
+            <div id="timeline" class="timeline">
+                </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
