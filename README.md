@@ -26,7 +26,7 @@ To run the application follow these steps:
 >
 > **docker compose up -d** 
 >
-> Upon execution, 3 images will be built, and subsequently 3 containers will be ran in parallel, one for the PHP server (ran on port 8080), one for the MongoDB database (ran on port 27017) and one for the backend of the application (ran on port 5000).
+> Upon execution, 3 images will be built, and subsequently 3 containers will be ran in parallel, one for the PHP server which hosts the web-app (ran on port 8080), one for the MongoDB database (ran on port 27017) and one for the backend of the application (ran on port 5000).
 >
 > The web application is hosted on port 8080, to reach access this, type in browser search-bar of choice:
 >
