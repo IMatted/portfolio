@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Changelog</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Project Changelog</h1>
+        <p style="text-align: center; color: var(--text-secondary);">Stay up to date with our latest updates and fixes.</p>
+        <nav style="text-align: center; margin-top: 10px;">
+            <a href="index.html" style="color: var(--accent); text-decoration: none; font-weight: bold;">👈 Back to Developer Dashboard</a>
+        </nav>
+    </header>
+
+    <main style="max-width: 800px; margin: 0 auto;">
+        <section class="timeline-section">
+            <h2>Latest Updates</h2>
+            <div id="publicTimeline" class="timeline">
+                </div>
+        </section>
+    </main>
+
+    <script>
+        // Use the new filtered endpoint
+        const PUBLISHED_API_URL = 'http://localhost:5000/api/releases/published';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const timeline = document.getElementById('publicTimeline');
+            
+            try {
+                const response = await fetch(PUBLISHED_API_URL);
+                const data = await response.json();
+                
+                timeline.innerHTML = '';
+
+                if (data.length === 0) {
+                    timeline.innerHTML = '<p class="empty-msg">No published release notes yet. Check back soon!</p>';
+                    return;
+                }
+
+                data.forEach(release => {
+                    const card = document.createElement('div');
+                    // Give it a clean, permanent published look
+                    card.className = 'release-card published'; 
+                    
+                    const features = release.changelog.features.map(f => `<li>${f}</li>`).join('');
+                    const bugFixes = release.changelog.bug_fixes.map(b => `<li>${b}</li>`).join('');
+                    const maintenance = release.changelog.maintenance.map(m => `<li>${m}</li>`).join('');
+
+                    card.innerHTML = `
+                        <div class="card-header">
+                            <h3>${release.version}: ${release.title}</h3>
+                        </div>
+                        <div class="card-body">
+                            ${features ? `<h4>🚀 Features</h4><ul>${features}</ul>` : ''}
+                            ${bugFixes ? `<h4>🐛 Bug Fixes</h4><ul>${bugFixes}</ul>` : ''}
+                            ${maintenance ? `<h4>🔧 Maintenance</h4><ul>${maintenance}</ul>` : ''}
+                        </div>
+                    `;
+                    timeline.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Error loading changelog:', error);
+                timeline.innerHTML = '<p class="error-msg">Error loading changelog data.</p>';
+            }
+        });
+    </script>
+</body>
+</html>

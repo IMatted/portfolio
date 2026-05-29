@@ -79,7 +79,7 @@ def create_release():
         "title": data['title'],
         "raw_input": data['raw_input'],
         "changelog": structured_changelog,
-        "is_published": False, # Defaults to false as a working draft
+        "is_published": False,
         "created_at": datetime.datetime.utcnow().isoformat()
     }
 
@@ -93,6 +93,16 @@ def create_release():
 def get_all_releases():
     try:
         cursor = releases_collection.find().sort("created_at", -1)
+        releases_list = [serialize_release(doc) for doc in cursor]
+        return jsonify(releases_list), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# Read: For the Published Notes Only
+@app.route('/api/releases/published', methods=['GET'])
+def get_published_releases():
+    try:
+        cursor = releases_collection.find({"is_published": True}).sort("created_at", -1)
         releases_list = [serialize_release(doc) for doc in cursor]
         return jsonify(releases_list), 200
     except Exception as e:
