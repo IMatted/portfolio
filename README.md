@@ -96,7 +96,7 @@ The list of dependencies is as follows:
 >
 > Git Bash [Windows Only]
 >
-> Python version 3.14
+> Python version 3.9 [Or higher]
 
 Libraries (detailed from requirements.txt):
 
@@ -134,7 +134,7 @@ Set-up Instructions:
 >
 > "Can you provide a testing script for the application" alongside a import of the code folder. This gave the output of test_app.py
 >
-> "Can you help me implement a note parser for use in an automatic patchnote organizer." This gave the output of the ai_assisted_note_parser function in app.py
+> "I am making an MVP with flask as the backend, Can you help me implement a note parser function for use in an automatic patchnote organizer? It will need a way to seperate bug fixes, general updates, and additions" This gave the output of the ai_assisted_note_parser function in app.py
 >
 > No specific prompts were used, but ai was used to help with reading and writting into the database through some of the functions in the front and backend.
 
