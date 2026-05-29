@@ -1,6 +1,10 @@
 # Automatic Patch Notes Architect
 
+## TL:DR: Automatically takes rough bulletpoints and organizes them into legible and neat patchnotes.
+
 Bitbucket URL: https://bitbucket.org/danish_singh_cs322/mvp
+
+Canvas Video Link: [Will go here]
 
 Author: Danish Singh
 
@@ -56,7 +60,7 @@ To enter the database from the terminal follow these steps:
 >
 > Execute in terminal:
 > 
-> **docker compose exec db mongo**
+> **docker compose exec db mongosh**
 >
 > **use release_architect_db**
 >
@@ -80,17 +84,9 @@ To enter the database from the terminal follow these steps:
 
 **This Assumes the Application is Running**
 
-To run the tests regarding the web-app follow these steps:
-
-> Navigate to the "mvp" directory, then the "backend" directory, in the terminal this will look like:
+> To run the tests regarding the web-app, ensure you are in the root "mvp" directory and execute:
 >
-> **cd mvp**
->
-> **cd backend**
->
-> Next to run the tests, execute in the terminal:
->
-> **docker exec -it mvp-backend-1 python test_app.py**
+> **docker compose exec backend python test_app.py**
 
 ---
 
