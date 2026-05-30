@@ -2,3 +2,4 @@ credentials.ini
 __pycache__/
 *.pyc
 feedback.txt
+.mp4
