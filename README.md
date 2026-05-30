@@ -4,7 +4,7 @@
 
 Bitbucket URL: https://bitbucket.org/danish_singh_cs322/mvp
 
-Canvas Video Link: [Will go here]
+Canvas Video Link: https://drive.google.com/file/d/1ZHC_8bKVrrmNmIKqc88NEb_guNc3NYbQ/view?usp=sharing
 
 Author: Danish Singh
 
